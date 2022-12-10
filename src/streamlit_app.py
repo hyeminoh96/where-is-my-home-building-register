@@ -20,7 +20,8 @@ def run_query(query):
         return cur.fetchall()
 
 
-rows = run_query("SELECT * FROM address_code limit 5;")
+test_query = "SELECT * FROM address_code LIMIT 5;"
+rows = run_query(test_query)
 
 # print results
 for row in rows:
