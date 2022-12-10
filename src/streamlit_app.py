@@ -5,7 +5,11 @@ import mysql.connector
 # Initialize connection
 @st.experimental_singleton
 def init_connection():
-    return mysql.connector.connect(**st.secrets["mysql"])
+    try:
+        connection = mysql.connector.connect(**st.secrets["mysql"])
+        return connection
+    except mysql.connector.Error as e:
+        print("mysql Error:", e)
 
 
 conn = init_connection()
