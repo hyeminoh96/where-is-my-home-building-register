@@ -21,9 +21,19 @@ def run_query(query):
         return cur.fetchall()
 
 
-test_query = "SELECT * FROM address_code LIMIT 5;"
-rows = run_query(test_query)
+sido_query = "SELECT distinct sido FROM address_code;"
+sido_results = run_query(sido_query)
 
-# print results
-for row in rows:
-    st.write(row)
+# results to tuple
+sido_list = []
+for _ in sido_results:
+    sido_list.append(_[0])
+
+sido_option = st.selectbox('시도', tuple(sido_list))
+st.write('선택된 시도:', sido_option)
+
+sigungu_query = f"SELECT distinct sigungu FROM address_code WHERE sido='{sido_option}';"
+print('sigungu_query:', sigungu_query)
+sigungu_results = run_query(sigungu_query)
+
+print('sigungu_results:', sigungu_results)
