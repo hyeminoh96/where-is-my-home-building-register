@@ -21,9 +21,8 @@ def run_query(query):
         return cur.fetchall()
 
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 with col1:
-
     sido_query = "SELECT distinct sido FROM address_code;"
     sido_results = run_query(sido_query)
 
@@ -54,3 +53,12 @@ with col3:
     bjdong_option = st.selectbox('동읍면', tuple(bjdong_list))
     st.write('선택된 동읍면:', bjdong_option)
 
+address_code_query = f"SELECT sigungucd, bjdongcd FROM address_code WHERE sido = '{sido_option}' AND sigungu = '{sigungu_option}' AND bjdong = '{bjdong_option}'"
+address_code_result = run_query(address_code_query)
+print(address_code_result)
+
+with col4:
+    if st.button('조회'):
+        st.write(address_code_result)
+    else:
+        st.write('주소를 선택하세요.')
