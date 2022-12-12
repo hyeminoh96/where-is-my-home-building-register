@@ -24,7 +24,6 @@ def run_query(query):
 sido_query = "SELECT distinct sido FROM address_code;"
 sido_results = run_query(sido_query)
 
-# results to tuple
 sido_list = []
 for _ in sido_results:
     sido_list.append(_[0])
@@ -40,4 +39,13 @@ for _ in sigungu_results:
     sigungu_list.append(_[0])
 sigungu_option = st.selectbox('시군구', tuple(sigungu_list))
 st.write('선택된 시군구:', sigungu_option)
+
+bjdong_query = f"SELECT distinct bjdong FROM address_code WHERE sigungu='{sigungu_option}';"
+bjdong_results = run_query(bjdong_query)
+
+bjdong_list = []
+for _ in bjdong_results:
+    bjdong_list.append(_[0])
+bjdong_option = st.selectbox('동읍면', tuple(bjdong_list))
+st.write('선택된 동읍면:', bjdong_option)
 
