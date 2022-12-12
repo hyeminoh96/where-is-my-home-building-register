@@ -33,7 +33,11 @@ sido_option = st.selectbox('시도', tuple(sido_list))
 st.write('선택된 시도:', sido_option)
 
 sigungu_query = f"SELECT distinct sigungu FROM address_code WHERE sido='{sido_option}';"
-print('sigungu_query:', sigungu_query)
 sigungu_results = run_query(sigungu_query)
 
-print('sigungu_results:', sigungu_results)
+sigungu_list = []
+for _ in sigungu_results:
+    sigungu_list.append(_[0])
+sigungu_option = st.selectbox('시군구', tuple(sigungu_list))
+st.write('선택된 시군구:', sigungu_option)
+
