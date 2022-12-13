@@ -1,6 +1,8 @@
 import streamlit as st
 import mysql.connector
 
+from api_request import getBrTitleInfo
+
 
 # Initialize connection
 @st.experimental_singleton
@@ -53,12 +55,14 @@ with col3:
     bjdong_option = st.selectbox('동읍면', tuple(bjdong_list))
     st.write('선택된 동읍면:', bjdong_option)
 
-address_code_query = f"SELECT sigungucd, bjdongcd FROM address_code WHERE sido = '{sido_option}' AND sigungu = '{sigungu_option}' AND bjdong = '{bjdong_option}'"
-address_code_result = run_query(address_code_query)
-print(address_code_result)
-
 with col4:
     if st.button('조회'):
-        st.write(address_code_result)
+        address_code_query = f"SELECT sigungucd, bjdongcd FROM address_code WHERE sido = '{sido_option}' AND sigungu = '{sigungu_option}' AND bjdong = '{bjdong_option}'"
+        address_code_result = run_query(address_code_query)
+        print(address_code_result)
+        st.write(address_code_result[0])
+        sigunguCd = address_code_result[0][0]
+        bjdongCd = address_code_result[0][1]
+        getBrTitleInfo(sigunguCd, bjdongCd, st.secrets['openapi'])
     else:
         st.write('주소를 선택하세요.')
