@@ -1,4 +1,5 @@
 import requests
+import pandas as pd
 
 
 def getBrTitleInfo(sigunguCd, bjdongCd, secret):
@@ -10,4 +11,4 @@ def getBrTitleInfo(sigunguCd, bjdongCd, secret):
               'startDate': '', 'endDate': '', 'numOfRows': '10', 'pageNo': '1'}
 
     response = requests.get(url, params=params)
-    print(response.json())
+    return response.json()['response']['body']['items']['item']

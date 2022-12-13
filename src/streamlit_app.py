@@ -63,6 +63,9 @@ with col4:
         st.write(address_code_result[0])
         sigunguCd = address_code_result[0][0]
         bjdongCd = address_code_result[0][1]
-        getBrTitleInfo(sigunguCd, bjdongCd, st.secrets['openapi'])
+        bld_df = getBrTitleInfo(sigunguCd, bjdongCd, st.secrets['openapi'])
+
     else:
         st.write('주소를 선택하세요.')
+
+st.dataframe(data=bld_df)
