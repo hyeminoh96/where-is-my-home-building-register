@@ -69,3 +69,10 @@ with col4:
         st.write('주소를 선택하세요.')
 
 st.dataframe(data=bld_df)
+
+
+def convert_df(df):
+    return df.to_csv().encode('utf-8')
+
+
+st.download_button(label='📥엑셀로 다운로드', data=convert_df(bld_df), file_name="streamlit_download_test.csv", mime='text/csv')
