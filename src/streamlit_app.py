@@ -1,5 +1,7 @@
 import streamlit as st
 import mysql.connector
+import io
+import pandas as pd
 
 from api_request import getBrTitleInfo
 
@@ -70,9 +72,9 @@ with col4:
 
 st.dataframe(data=bld_df)
 
-
-def convert_df(df):
-    return df.to_csv().encode('utf-8')
-
-
-st.download_button(label='📥엑셀로 다운로드', data=convert_df(bld_df), file_name="streamlit_download_test.csv", mime='text/csv')
+buffer = io.BytesIO()
+with pd.ExcelWriter(buffer) as writer:
+    bld_df.to_excel(writer)
+    writer.save()
+    st.download_button(label='📥엑셀로 다운로드', data=buffer, file_name=f"건축물대장_{sido_option}_{sigungu_option}_{bjdong_option}.xlsx",
+                       mime='application/vnd.ms-excel')
