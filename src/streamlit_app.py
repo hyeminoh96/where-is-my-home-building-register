@@ -61,7 +61,6 @@ with col4:
     if st.button('조회'):
         address_code_query = f"SELECT sigungucd, bjdongcd FROM address_code WHERE sido = '{sido_option}' AND sigungu = '{sigungu_option}' AND bjdong = '{bjdong_option}'"
         address_code_result = run_query(address_code_query)
-        print(address_code_result)
         st.write(address_code_result[0])
         sigunguCd = address_code_result[0][0]
         bjdongCd = address_code_result[0][1]
