@@ -4,6 +4,7 @@ import io
 import pandas as pd
 
 from api_request import getBrTitleInfo
+from db import filter_open_column
 
 
 # Initialize connection
@@ -65,6 +66,7 @@ with col4:
         sigunguCd = address_code_result[0][0]
         bjdongCd = address_code_result[0][1]
         bld_df = getBrTitleInfo(sigunguCd, bjdongCd, st.secrets['openapi'])
+        bld_df = filter_open_column(bld_df)
 
     else:
         st.write('주소를 선택하세요.')

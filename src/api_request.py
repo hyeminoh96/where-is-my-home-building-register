@@ -1,23 +1,5 @@
 import requests
 import pandas as pd
-import streamlit as st
-import mysql.connector
-
-
-@st.experimental_singleton
-def init_connection():
-    connection = mysql.connector.connect(**st.secrets["mysql"])
-    return connection
-
-
-conn = init_connection()
-
-
-@st.experimental_memo(ttl=600)
-def run_query(query):
-    with conn.cursor() as cur:
-        cur.execute(query)
-        return cur.fetchall()
 
 
 def getBrTitleInfo(sigunguCd, bjdongCd, secret):
@@ -30,14 +12,4 @@ def getBrTitleInfo(sigunguCd, bjdongCd, secret):
     response = requests.get(url, params=params)
     response_json = response.json()['response']['body']['items']['item']
     response_df = pd.DataFrame(response_json)
-
-    open_col = run_query("SELECT eng FROM response_element_mapper WHERE status = 'open'")
-    open_col_list = []
-    for _ in open_col:
-        open_col_list.append(_[0])
-
-    response_df = response_df[open_col_list]
-
-    mapping_keys = dict(run_query("SELECT eng, kor FROM response_element_mapper WHERE status = 'open'"))
-    response_df.rename(columns=mapping_keys, inplace=True)
     return response_df
