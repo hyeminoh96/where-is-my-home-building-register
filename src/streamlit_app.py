@@ -16,7 +16,7 @@ def init_connection():
 
 conn = init_connection()
 
-st.header('Streamlit Test View')
+st.header('건축물대장 조회')
 
 
 @st.experimental_memo(ttl=600)
