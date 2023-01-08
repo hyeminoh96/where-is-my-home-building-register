@@ -48,3 +48,4 @@ validators==0.20.0
 Werkzeug==2.2.2
 zipp==3.11.0
 pyxlsb==1.0.10
+xmltodict==0.13.0
