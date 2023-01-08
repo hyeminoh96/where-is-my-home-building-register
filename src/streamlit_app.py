@@ -33,7 +33,7 @@ st.dataframe(data=bld_df)
 
 buffer = io.BytesIO()
 with pd.ExcelWriter(buffer) as writer:
-    bld_df.to_excel(writer)
+    bld_df.to_excel(writer, index=False)
     writer.save()
     st.download_button(label='📥엑셀로 다운로드', data=buffer,
                        file_name=f"건축물대장_{sido_option}_{sigungu_option}_{bjdong_option}.xlsx",
