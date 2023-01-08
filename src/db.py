@@ -67,3 +67,14 @@ def filter_open_column(df):
     mapping_keys = dict(run_query("SELECT eng, kor FROM getBrExposInfo_mapper WHERE status = 'open'"))
     df.rename(columns=mapping_keys, inplace=True)
     return df
+
+
+def filter_owner_open_column(df):
+    open_col = run_query("SELECT eng FROM getArchitecturePossessionInfo_mapper WHERE status = 'open'")
+    open_col_list = []
+    for _ in open_col:
+        open_col_list.append(_[0])
+    df = df[open_col_list]
+    mapping_keys = dict(run_query("SELECT eng, kor FROM getArchitecturePossessionInfo_mapper WHERE status = 'open'"))
+    df.rename(columns=mapping_keys, inplace=True)
+    return df
