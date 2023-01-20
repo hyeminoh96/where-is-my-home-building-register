@@ -29,10 +29,12 @@ built using Python and utilizes the requests library to call the API and the pan
 
 ## Setting environment variables
 
-In order to call the API, you need to have API_KEY as an environment variable. You can set the environment variable in
-your local environment by following these steps:
+In order to call the API, you need to have API_KEY as an environment variable. \
+You can either set the variable in your local environment or store it in a .env file.
 
-### Windows
+### Option 1: Setting in local environment
+
+#### Windows
 
 1. Open the Command Prompt
 2. Type the following command and replace API_KEY with your actual API key:
@@ -41,14 +43,23 @@ your local environment by following these steps:
     ```
 3. Close and reopen the Command Prompt to apply the changes
 
+#### Linux or macOS
 
-### Linux or macOS
 1. Open the terminal
 2. Type the following command and replace API_KEY with your actual API key:
     ```console
     export API_KEY="your_api_key"
     ```
 3. Add the above command to your .bashrc or .bash_profile file to make the environment variable permanent.
+
+### Option 2: Storing in a .env file
+
+1. Create a new file named .env in the root of your project
+2. Add the following line to the file and replace API_KEY with your actual API key:
+    ```toml
+   [openapi]
+    API_KEY="your_api_key"
+    ```
 
 Make sure that you have set the environment variable correctly before running the app.
 
