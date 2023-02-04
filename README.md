@@ -1,6 +1,6 @@
 # Open API to Excel Streamlit App
 
-This Streamlit app allows users to call data from a specified open API and export the data to an Excel file. The app is
+This Streamlit app allows users to call building register data from Korea DATA Portal open API and export the data to an Excel file. The app is
 built using Python and utilizes the requests library to call the API and the pandas library to create the Excel file.
 
 ## How to use
@@ -17,15 +17,13 @@ built using Python and utilizes the requests library to call the API and the pan
    ```console
    python src/streamlit_app.py
    ```
-4. In the app, enter the API endpoint URL and any required headers or parameters.
+4. Click the "Call API" button to retrieve the data from the API.
 
-5. Click the "Call API" button to retrieve the data from the API.
+5. Review the data in the app and select the columns you want to include in the Excel file.
 
-6. Review the data in the app and select the columns you want to include in the Excel file.
+6. Click the "Export to Excel" button to create the Excel file. The file will be saved in the current working directory.
 
-7. Click the "Export to Excel" button to create the Excel file. The file will be saved in the current working directory.
-
-8. The app allows you to call the API and export data to excel as many times you want.
+7. The app allows you to call the API and export data to excel as many times you want.
 
 ## Setting environment variables
 
@@ -39,7 +37,7 @@ You can either set the variable in your local environment or store it in a .env 
 1. Open the Command Prompt
 2. Type the following command and replace API_KEY with your actual API key:
     ```console
-    setx API_KEY "your_api_key"
+    set API_KEY "your_api_key"
     ```
 3. Close and reopen the Command Prompt to apply the changes
 
@@ -62,11 +60,6 @@ You can either set the variable in your local environment or store it in a .env 
     ```
 
 Make sure that you have set the environment variable correctly before running the app.
-
-## Customization
-
-To customize the app to work with a different API, update the API endpoint URL, headers, and parameters in the app.py
-file accordingly.
 
 ## Note
 
