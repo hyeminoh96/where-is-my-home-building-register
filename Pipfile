@@ -9,6 +9,7 @@ streamlit = "*"
 mysql-connector-python = "*"
 pyxlsb = "*"
 xmltodict = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
