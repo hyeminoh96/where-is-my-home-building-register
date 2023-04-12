@@ -8,7 +8,7 @@ load_dotenv()
 service_key = os.environ.get('API_KEY')
 
 
-def getArchitecturePossessionInfo(sigunguCd, bjdongCd, bld_df, secret):
+def get_architecture_possession(sigunguCd, bjdongCd, bld_df, secret):
     service_key = secret['bldrgst_service_key']
     url = 'https://apis.data.go.kr/1611000/OwnerInfoService/getArchitecturePossessionInfo'
     params = {'ServiceKey': service_key, 'sigungu_cd': sigunguCd, 'bjdong_cd': bjdongCd,
