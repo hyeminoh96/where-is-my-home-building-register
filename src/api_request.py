@@ -1,7 +1,7 @@
 import requests
 import os
 import asyncio
-from time import time
+import pandas as pd
 from dotenv import load_dotenv
 
 
@@ -15,7 +15,8 @@ class GetBuildingRegister:
         self.bld_rgst_url = 'https://apis.data.go.kr/1613000/BldRgstService_v2/getBrExposInfo'
         self.num_per_pg = 1000
 
-        self.loop = asyncio.get_event_loop()
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
 
     def get_total_count(self):
         params = {'_type': 'json', 'serviceKey': self.service_key, 'sigunguCd': self.sigungu_cd,
@@ -45,13 +46,8 @@ class GetBuildingRegister:
         result = await asyncio.gather(*futures)
         return result
 
-    def run(self):
-        self.loop.run_until_complete(self.gather_coroutines())
+    async def run(self):
+        result = self.loop.run_until_complete(self.gather_coroutines())
+        result_df = pd.DataFrame(result)
         self.loop.close()
-
-
-if __name__ == '__main__':
-    start = time()
-    GetBuildingRegister(11230, 10900).run()
-    end = time()
-    print(f'RUN TIME: {end - start}')
+        return result_df
