@@ -10,6 +10,8 @@ mysql-connector-python = "*"
 pyxlsb = "*"
 xmltodict = "*"
 python-dotenv = "*"
+pandas = "*"
+requests = "*"
 
 [dev-packages]
 

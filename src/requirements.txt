@@ -49,3 +49,4 @@ Werkzeug==2.2.2
 zipp==3.11.0
 pyxlsb==1.0.10
 xmltodict==0.13.0
+requests~=2.28.1
