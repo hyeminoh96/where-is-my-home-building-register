@@ -2,7 +2,7 @@ import mysql.connector
 import streamlit as st
 
 
-@st.experimental_singleton
+@st.cache_resource
 def init_connection():
     connection = mysql.connector.connect(**st.secrets["mysql"])
     return connection
@@ -11,7 +11,7 @@ def init_connection():
 conn = init_connection()
 
 
-@st.experimental_memo(ttl=600)
+@st.cache_data(ttl=600)
 def run_query(query):
     with conn.cursor() as cur:
         cur.execute(query)
