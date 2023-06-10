@@ -37,17 +37,27 @@ class GetBuildingRegister:
 
         response = await self.loop.run_in_executor(None, requests.get, self.bld_rgst_url, params)
         response_json = response.json()['response']['body']['items']['item']
+        print(response_json)
         return response_json
 
     async def gather_coroutines(self):
+        print('passed here')
         total_count = self.get_total_count()
+        print('total_count:', total_count)
         futures = [asyncio.ensure_future(self.get_bld_rgst(pg_num)) for pg_num in
                    range(1, total_count // self.num_per_pg + 2)]
         result = await asyncio.gather(*futures)
         return result
 
-    async def run(self):
+    async def run(self) -> list:
         result = self.loop.run_until_complete(self.gather_coroutines())
-        result_df = pd.DataFrame(result)
+        print('result:', result)
+        # result_df = pd.DataFrame(result)
         self.loop.close()
-        return result_df
+        # just return list of dict
+        return result
+
+
+if __name__ == '__main__':
+    result = GetBuildingRegister(11110, 10100).run()
+    print(result)

@@ -2,7 +2,8 @@ import streamlit as st
 import io
 import pandas as pd
 
-from api_request import getBrTitleInfo, getArchitecturePossessionInfo
+from api_request import GetBuildingRegister
+from building_possession_info import get_architecture_possession
 from db import filter_open_column, get_sido_list, get_sigungu_list, get_bjdong_list, get_address_code, \
     filter_owner_open_column
 
@@ -26,8 +27,9 @@ with col4:
 
 if search_button:
     sigungu_code, bjdong_code = get_address_code(sido_option, sigungu_option, bjdong_option)
-    bld_df = getBrTitleInfo(sigungu_code, bjdong_code, st.secrets['openapi'])
-    owner_df = getArchitecturePossessionInfo(sigungu_code, bjdong_code, bld_df, st.secrets['openapi'])
+    bld_df = GetBuildingRegister(sigungu_code, bjdong_code).run()
+    print(type(bld_df))
+    owner_df = get_architecture_possession(sigungu_code, bjdong_code, bld_df, st.secrets['openapi'])
     bld_df = filter_open_column(bld_df)
     owner_df = filter_owner_open_column(owner_df)
     total_df = pd.merge(left=bld_df, right=owner_df, how='left', on='건축물대장번호')
@@ -40,3 +42,5 @@ if search_button:
         st.download_button(label='📥엑셀로 다운로드', data=buffer,
                            file_name=f"건축물대장_{sido_option}_{sigungu_option}_{bjdong_option}.xlsx",
                            mime='application/vnd.ms-excel')
+        st.success("다운로드가 완료되었습니다.", icon="✅")
+
