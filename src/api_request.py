@@ -1,63 +1,58 @@
 import requests
 import os
 import asyncio
-import pandas as pd
 from dotenv import load_dotenv
 
+sigungu_cd = 11230
+bjdong_cd = 10600
 
-class GetBuildingRegister:
-    def __init__(self, sigungu_code, bjdong_code):
-        self.sigungu_cd = sigungu_code
-        self.bjdong_cd = bjdong_code
+load_dotenv()
+service_key = os.environ.get('API_KEY')
+bld_rgst_url = 'https://apis.data.go.kr/1613000/BldRgstService_v2/getBrExposInfo'
+num_of_rows = 100
 
-        load_dotenv()
-        self.service_key = os.environ.get('API_KEY')
-        self.bld_rgst_url = 'https://apis.data.go.kr/1613000/BldRgstService_v2/getBrExposInfo'
-        self.num_per_pg = 1000
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
 
-        self.loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.loop)
 
-    def get_total_count(self):
-        params = {'_type': 'json', 'serviceKey': self.service_key, 'sigunguCd': self.sigungu_cd,
-                  'bjdongCd': self.bjdong_cd,
-                  'platGbCd': '0',
-                  'bun': '', 'ji': '',
-                  'startDate': '', 'endDate': '', 'numOfRows': '1', 'pageNo': '1'}
-        response = requests.get(self.bld_rgst_url, params=params)
-        total_count = response.json()['response']['body']['totalCount']
-        return total_count
+def get_total_count():
+    params = {'_type': 'json', 'serviceKey': service_key, 'sigunguCd': sigungu_cd,
+              'bjdongCd': bjdong_cd,
+              'platGbCd': '0',
+              'bun': '', 'ji': '',
+              'startDate': '', 'endDate': '', 'numOfRows': '1', 'pageNo': '1'}
+    response = requests.get(bld_rgst_url, params=params)
+    total_count = response.json()['response']['body']['totalCount']
+    return total_count
 
-    async def get_bld_rgst(self, page_num):
-        params = {'_type': 'json', 'serviceKey': self.service_key, 'sigunguCd': self.sigungu_cd,
-                  'bjdongCd': self.bjdong_cd,
-                  'platGbCd': '0',
-                  'bun': '', 'ji': '',
-                  'startDate': '', 'endDate': '', 'numOfRows': self.num_per_pg, 'pageNo': page_num}
 
-        response = await self.loop.run_in_executor(None, requests.get, self.bld_rgst_url, params)
-        response_json = response.json()['response']['body']['items']['item']
-        print(response_json)
-        return response_json
+async def fetch_building_register(page_num):
+    params = {'_type': 'json', 'serviceKey': service_key, 'sigunguCd': sigungu_cd,
+              'bjdongCd': bjdong_cd,
+              'platGbCd': '0',
+              'bun': '', 'ji': '',
+              'startDate': '', 'endDate': '', 'numOfRows': num_of_rows, 'pageNo': page_num}
 
-    async def gather_coroutines(self):
-        print('passed here')
-        total_count = self.get_total_count()
-        print('total_count:', total_count)
-        futures = [asyncio.ensure_future(self.get_bld_rgst(pg_num)) for pg_num in
-                   range(1, total_count // self.num_per_pg + 2)]
-        result = await asyncio.gather(*futures)
-        return result
+    response = await loop.run_in_executor(None, requests.get, bld_rgst_url, params)
+    response_json = response.json()['response']['body']['items']['item']
+    return response_json
 
-    async def run(self) -> list:
-        result = self.loop.run_until_complete(self.gather_coroutines())
-        print('result:', result)
-        # result_df = pd.DataFrame(result)
-        self.loop.close()
-        # just return list of dict
-        return result
+
+async def gather_coroutines(total_count):
+    futures = [asyncio.ensure_future(fetch_building_register(pg_num)) for pg_num in
+               range(1, total_count // num_of_rows + 2)]
+    result = await asyncio.gather(*futures)
+    print("RESULT:", result)
+    print('TOTAL COUNT:', total_count)
+    print("LEN:", len(result))
+    print("LEN[0]:", len(result[0]))
+    print("LEN[:-1]:", len(result[:-1]))
+
+    return result
 
 
 if __name__ == '__main__':
-    result = GetBuildingRegister(11110, 10100).run()
-    print(result)
+    total_count = get_total_count()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(gather_coroutines(total_count))
+    loop.close()
