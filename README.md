@@ -7,7 +7,7 @@ built using Python and utilizes the requests library to call the API and the pan
 
 1. Clone the repository
    ```console
-   git clone https://github.com/hyeminoh96/where-is-my-home-bldrgst.git
+   git clone https://github.com/hyeminoh96/where-is-my-home-building-register.git
    ```
 2. Install the required libraries
    ```console
