@@ -15,7 +15,7 @@ built using Python and utilizes the requests library to call the API and the pan
    ```
 3. Run the streamlit app
    ```console
-   python src/streamlit_app.py
+   streamlit run src/streamlit_app.py
    ```
 4. Click the "Call API" button to retrieve the data from the API.
 
