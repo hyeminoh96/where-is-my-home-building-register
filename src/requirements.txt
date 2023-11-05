@@ -21,7 +21,7 @@ mysql-connector-python==8.0.31
 numpy==1.23.5
 packaging==22.0
 pandas==1.5.2
-Pillow==9.3.0
+pillow>=10.0.1
 protobuf==3.20.1
 pyarrow==10.0.1
 pydeck==0.8.0
