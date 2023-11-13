@@ -1,6 +1,14 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+from src.config import MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_SCHEMA_NAME
 
 app = Flask(__name__)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PASSWORD}/{MYSQL_SCHEMA_NAME}"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db = SQLAlchemy(app)
+db.create_all()
 
 
 @app.route('/')
