@@ -1,25 +1,31 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 
 from src.application.address_service import AddressService
 from src.config import app_config, config_name
+from src.domain.address import Address, db
 
 
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(app_config[config_name])
 
-    db = SQLAlchemy(app=app)
-    # db.create_all()
+    db.init_app(app=app)
     return app
 
 
 app = create_app(config_name)
 
+# Comment out this after table creation
+with app.app_context():
+    db.create_all()
+
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    result = db.session.execute(text('SELECT 1'))
+    one = result.first()
+    return one
 
 
 @app.route('/address/sido')
