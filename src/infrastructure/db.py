@@ -1,6 +1,10 @@
 # import mysql.connector
 # import streamlit as st
 #
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
 #
 # @st.cache_resource
 # def init_connection():
