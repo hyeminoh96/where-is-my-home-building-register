@@ -42,5 +42,14 @@ def get_sigungu():
     return sigungu_list
 
 
+@app.route('/address/bjdong')
+def get_bjdong():
+    sido = request.args.get('sido')
+    sigungu = request.args.get('sigungu')
+    address_service = AddressService()
+    bjdong_list = address_service.get_bjdong(sido, sigungu)
+    return bjdong_list
+
+
 if __name__ == '__main__':
     app.run()
