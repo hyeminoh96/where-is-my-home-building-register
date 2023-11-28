@@ -61,5 +61,10 @@ def get_address_code():
     return str(code)
 
 
+@app.route('/building-register/general')
+def get_general_register():
+    pass
+
+
 if __name__ == '__main__':
     app.run()
