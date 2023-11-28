@@ -51,5 +51,15 @@ def get_bjdong():
     return bjdong_list
 
 
+@app.route('/address/code')
+def get_address_code():
+    sido = request.args.get('sido')
+    sigungu = request.args.get('sigungu')
+    bjdong = request.args.get('bjdong')
+    address_service = AddressService()
+    code = address_service.get_code(sido, sigungu, bjdong)
+    return str(code)
+
+
 if __name__ == '__main__':
     app.run()

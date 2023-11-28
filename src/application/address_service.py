@@ -16,5 +16,6 @@ class AddressService:
         bjdong_list = self.address_repo.query_bjdong_list(sido, sigungu)
         return bjdong_list
 
-    def get_code(self, sido, sigungu, bjdong):
-        pass
+    def get_code(self, sido, sigungu, bjdong) -> tuple:
+        sigungu_code, bjdong_code = self.address_repo.query_code(sido, sigungu, bjdong)
+        return sigungu_code, bjdong_code
