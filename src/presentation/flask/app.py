@@ -1,6 +1,7 @@
 from flask import Flask, request
 
 from src.application.address_service import AddressService
+from src.application.building_register_service import BuildingRegisterService
 from src.config import app_config, config_name
 from src.infrastructure.db import db
 
@@ -63,7 +64,11 @@ def get_address_code():
 
 @app.route('/building-register/general')
 def get_general_register():
-    pass
+    sigungu_code = request.args.get('sigungu_code')
+    bjdong_code = request.args.get('bjdong_code')
+    register_service = BuildingRegisterService()
+    register_service.get_general_registers(sigungu_code, bjdong_code)
+    return 'YEs'
 
 
 if __name__ == '__main__':
