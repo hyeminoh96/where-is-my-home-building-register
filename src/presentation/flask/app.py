@@ -67,8 +67,8 @@ def get_general_register():
     sigungu_code = request.args.get('sigungu_code')
     bjdong_code = request.args.get('bjdong_code')
     register_service = BuildingRegisterService()
-    register_service.get_general_registers(sigungu_code, bjdong_code)
-    return 'YEs'
+    registers = register_service.get_general_registers(sigungu_code, bjdong_code)
+    return registers
 
 
 if __name__ == '__main__':
