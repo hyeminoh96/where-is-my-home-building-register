@@ -17,8 +17,9 @@ class BuildingRegisterRepository:
         response = get_request(self.url, params=params)
         response_json = response.json()
         total_count = response_json['response']['body']['totalCount']
+        total_count = 0
         if total_count == 0:
-            print("건축물대장이 존재하지 않습니다.")
+            raise Exception("건축물대장이 존재하지 않습니다.")
         return total_count
 
     def request_registers(self, page_num, sigungu_cd, bjdong_cd):
