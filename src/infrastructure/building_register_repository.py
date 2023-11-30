@@ -4,7 +4,7 @@ from src.infrastructure.utils import get_request
 
 
 class BuildingRegisterRepository:
-    url = 'https://apis.data.go.kr/1613000/BldRgstService_v2/getBrRecapTitleInfo'  # 총괄표제부 url
+    url = 'https://apis.data.go.kr/1613000/BldRgstService_v2/getBrTitleInfo'
     service_key = os.environ.get('API_KEY')
     rows_per_page = 1000
 
