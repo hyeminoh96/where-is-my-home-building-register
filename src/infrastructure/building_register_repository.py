@@ -37,7 +37,7 @@ class BuildingRegisterRepository:
     async def async_request_total_registers(self, sigungu_cd, bjdong_cd):
         total_count = self.request_total_count(sigungu_cd, bjdong_cd)
 
-        if total_count < self.rows_per_page:
+        if total_count < self.rows_per_page:  # TODO: 중복된 코드 제거
             async with aiohttp.ClientSession() as session:
                 task = self.async_request_registers(session, page_num=1, sigungu_cd=sigungu_cd,
                                                     bjdong_cd=bjdong_cd)

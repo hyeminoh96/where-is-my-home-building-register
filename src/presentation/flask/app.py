@@ -69,7 +69,7 @@ def get_general_register():
     sigungu_code = request.args.get('sigungu_code')
     bjdong_code = request.args.get('bjdong_code')
     register_service = BuildingRegisterService()
-    registers = asyncio.run(register_service.get_title_registers(sigungu_code, bjdong_code))
+    registers = register_service.get_title_registers(sigungu_code, bjdong_code)
     return registers
 
 
