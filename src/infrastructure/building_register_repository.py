@@ -1,4 +1,7 @@
+import asyncio
 import os
+
+import aiohttp
 
 from src.infrastructure.utils import get_request
 
@@ -21,27 +24,32 @@ class BuildingRegisterRepository:
             raise Exception("건축물대장이 존재하지 않습니다.")
         return total_count
 
-    def request_registers(self, page_num, sigungu_cd, bjdong_cd):
+    async def async_request_registers(self, session, page_num, sigungu_cd, bjdong_cd):
         params = {'_type': 'json', 'serviceKey': self.service_key, 'sigunguCd': sigungu_cd,
                   'bjdongCd': bjdong_cd,
                   'platGbCd': '0',
                   'bun': '', 'ji': '',
                   'startDate': '', 'endDate': '', 'numOfRows': self.rows_per_page, 'pageNo': page_num}
+        async with session.get(self.url, params=params) as response:
+            response_json = await response.json()
+            return response_json['response']['body']['items']['item']
 
-        response = get_request(self.url, params)
-        response_json = response.json()['response']['body']['items']['item']
-        return response_json
-
-    def request_total_registers(self, sigungu_cd, bjdong_cd):
-        result = []
+    async def async_request_total_registers(self, sigungu_cd, bjdong_cd):
         total_count = self.request_total_count(sigungu_cd, bjdong_cd)
 
         if total_count < self.rows_per_page:
-            registers = self.request_registers(page_num=1, sigungu_cd=sigungu_cd, bjdong_cd=bjdong_cd)
-            result += registers
+            async with aiohttp.ClientSession() as session:
+                task = self.async_request_registers(session, page_num=1, sigungu_cd=sigungu_cd,
+                                                    bjdong_cd=bjdong_cd)
+                result = await asyncio.gather(task)
+
         else:
-            for page in range(1, total_count // self.rows_per_page + 1):
-                registers = self.request_registers(page_num=page, sigungu_cd=sigungu_cd, bjdong_cd=bjdong_cd)
-                result += registers
+            tasks = []
+            async with aiohttp.ClientSession() as session:
+                for page in range(1, total_count // self.rows_per_page + 1):
+                    task = self.async_request_registers(session, page_num=page, sigungu_cd=sigungu_cd,
+                                                        bjdong_cd=bjdong_cd)
+                    tasks.append(task)
+                result = await asyncio.gather(*tasks)
 
         return result

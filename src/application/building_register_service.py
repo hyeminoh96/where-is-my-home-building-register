@@ -2,9 +2,9 @@ from src.infrastructure.building_register_repository import BuildingRegisterRepo
 
 
 class BuildingRegisterService:
-    register_repo = BuildingRegisterRepository()
 
-    def get_title_registers(self, sigungu_code, bjdong_code):
-        return self.register_repo.request_total_registers(sigungu_code, bjdong_code)
-
-
+    @staticmethod
+    async def get_title_registers(sigungu_code, bjdong_code):
+        register_repo = BuildingRegisterRepository()
+        registers = await register_repo.async_request_total_registers(sigungu_code, bjdong_code)
+        return registers
