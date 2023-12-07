@@ -1,5 +1,3 @@
-import asyncio
-
 from flask import Flask, request
 
 from src.application.address_service import AddressService
@@ -71,6 +69,13 @@ def get_general_register():
     register_service = BuildingRegisterService()
     registers = register_service.get_title_registers(sigungu_code, bjdong_code)
     return registers
+
+
+@app.route('/building-register/columns')
+def get_register_columns():
+    register_service = BuildingRegisterService()
+    columns = register_service.get_columns()
+    return str(columns)
 
 
 if __name__ == '__main__':
