@@ -62,12 +62,14 @@ def get_address_code():
     return str(code)
 
 
-@app.route('/building-register/title')
+@app.route('/building-register/title', methods=['POST'])
 def get_general_register():
     sigungu_code = request.args.get('sigungu_code')
     bjdong_code = request.args.get('bjdong_code')
+    data = request.json
+    columns = data.get('columns')
     register_service = BuildingRegisterService()
-    registers = register_service.get_title_registers(sigungu_code, bjdong_code)
+    registers = register_service.get_title_registers(sigungu_code, bjdong_code, columns)
     return registers
 
 
