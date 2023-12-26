@@ -19,3 +19,10 @@ class RegisterColumnsRepository:
                 status='open')).all()
         result = [RegisterTitleColumns(eng=row[0], kor=row[1]) for row in result]
         return result
+
+    def query_default_columns(self) -> List[RegisterTitleColumns]:
+        result = db.session.execute(
+            db.select(RegisterTitleColumnsMapper.eng, RegisterTitleColumnsMapper.kor).filter_by(
+                status='default')).all()
+        result = [RegisterTitleColumns(eng=row[0], kor=row[1]) for row in result]
+        return result

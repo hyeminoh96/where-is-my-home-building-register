@@ -4,6 +4,7 @@ from src.application.address_service import AddressService
 from src.application.building_register_service import BuildingRegisterService
 from src.config import app_config, config_name
 from src.infrastructure.db import db
+from src.infrastructure.register_columns_repository import RegisterTitleColumns
 
 
 def create_app(config_name):
@@ -67,7 +68,7 @@ def get_general_register():
     sigungu_code = request.args.get('sigungu_code')
     bjdong_code = request.args.get('bjdong_code')
     data = request.json
-    columns = data.get('columns')
+    columns = [RegisterTitleColumns(eng=column['eng'], kor=column['kor']) for column in data.get('columns')]
     register_service = BuildingRegisterService()
     registers = register_service.get_title_registers(sigungu_code, bjdong_code, columns)
     return registers
