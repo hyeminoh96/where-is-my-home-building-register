@@ -1,14 +1,17 @@
-from flask import Flask, request
+from flask import Flask
 
-from src.application.address_service import AddressService
-from src.application.building_register_service import BuildingRegisterService
 from src.config import app_config, config_name
 from src.infrastructure.db import db
-from src.infrastructure.register_columns_repository import RegisterTitleColumns
+from src.presentation.flask.address_router import address
+from src.presentation.flask.building_register import register
 
 
 def create_app(config_name):
     app = Flask(__name__)
+    # Register blueprints
+    app.register_blueprint(address)
+    app.register_blueprint(register)
+
     app.config.from_object(app_config[config_name])
     app.config['SQLALCHEMY_ECHO'] = True
 
@@ -27,58 +30,6 @@ app = create_app(config_name)
 @app.route('/')
 def hello_world():
     return 'Welcome!'
-
-
-@app.route('/address/sido')
-def get_sido():
-    address_service = AddressService()
-    sido_list = address_service.get_sido()
-    return sido_list
-
-
-@app.route('/address/sigungu')
-def get_sigungu():
-    sido = request.args.get('sido')
-    address_service = AddressService()
-    sigungu_list = address_service.get_sigungu(sido)
-    return sigungu_list
-
-
-@app.route('/address/bjdong')
-def get_bjdong():
-    sido = request.args.get('sido')
-    sigungu = request.args.get('sigungu')
-    address_service = AddressService()
-    bjdong_list = address_service.get_bjdong(sido, sigungu)
-    return bjdong_list
-
-
-@app.route('/address/code')
-def get_address_code():
-    sido = request.args.get('sido')
-    sigungu = request.args.get('sigungu')
-    bjdong = request.args.get('bjdong')
-    address_service = AddressService()
-    code = address_service.get_code(sido, sigungu, bjdong)
-    return str(code)
-
-
-@app.route('/building-register/title', methods=['POST'])
-def get_general_register():
-    sigungu_code = request.args.get('sigungu_code')
-    bjdong_code = request.args.get('bjdong_code')
-    data = request.json
-    columns = [RegisterTitleColumns(eng=column['eng'], kor=column['kor']) for column in data.get('columns')]
-    register_service = BuildingRegisterService()
-    registers = register_service.get_title_registers(sigungu_code, bjdong_code, columns)
-    return registers
-
-
-@app.route('/building-register/columns')
-def get_register_columns():
-    register_service = BuildingRegisterService()
-    columns = register_service.get_columns()
-    return str(columns)
 
 
 if __name__ == '__main__':
