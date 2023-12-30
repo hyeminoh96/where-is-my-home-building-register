@@ -2,17 +2,17 @@ from flask import request, Blueprint
 
 from src.application.address_service import AddressService
 
-address = Blueprint('address', __name__)
+address = Blueprint('address', __name__, url_prefix='/address')
 
 
-@address.route('/address/sido')
+@address.route('/sido')
 def get_sido():
     address_service = AddressService()
     sido_list = address_service.get_sido()
     return sido_list
 
 
-@address.route('/address/sigungu')
+@address.route('/sigungu')
 def get_sigungu():
     sido = request.args.get('sido')
     address_service = AddressService()
@@ -20,7 +20,7 @@ def get_sigungu():
     return sigungu_list
 
 
-@address.route('/address/bjdong')
+@address.route('/bjdong')
 def get_bjdong():
     sido = request.args.get('sido')
     sigungu = request.args.get('sigungu')
@@ -29,7 +29,7 @@ def get_bjdong():
     return bjdong_list
 
 
-@address.route('/address/code')
+@address.route('/code')
 def get_address_code():
     sido = request.args.get('sido')
     sigungu = request.args.get('sigungu')

@@ -3,7 +3,7 @@ from flask import Flask
 from src.config import app_config, config_name
 from src.infrastructure.db import db
 from src.presentation.flask.address_router import address
-from src.presentation.flask.building_register import register
+from src.presentation.flask.building_register_router import register
 
 
 def create_app(config_name):
