@@ -1,24 +1,23 @@
-import os
 import asyncio
+import os
 
 import aiohttp
-import requests
-from dotenv import load_dotenv
+
+from src.infrastructure.utils import get_request
 
 
-class GetBuildingRegister:
-    load_dotenv()
+class BuildingRegisterRepository:
+    url = 'https://apis.data.go.kr/1613000/BldRgstService_v2/getBrTitleInfo'
     service_key = os.environ.get('API_KEY')
-    bld_rgst_url = 'https://apis.data.go.kr/1613000/BldRgstService_v2/getBrTitleInfo'
     rows_per_page = 1000
 
     def request_total_count(self, sigungu_cd, bjdong_cd):
-        params = {'_type': 'json', 'serviceKey': self.service_key, 'sigunguCd': sigungu_cd,
-                  'bjdongCd': bjdong_cd,
+        params = {'_type': 'json', 'serviceKey': self.service_key, 'sigunguCd': str(sigungu_cd),
+                  'bjdongCd': str(bjdong_cd),
                   'platGbCd': '0',
                   'bun': '', 'ji': '',
                   'startDate': '', 'endDate': '', 'numOfRows': '1', 'pageNo': '1'}
-        response = requests.get(self.bld_rgst_url, params=params)
+        response = get_request(self.url, params=params)
         response_json = response.json()
         total_count = response_json['response']['body']['totalCount']
         if total_count == 0:
@@ -31,8 +30,7 @@ class GetBuildingRegister:
                   'platGbCd': '0',
                   'bun': '', 'ji': '',
                   'startDate': '', 'endDate': '', 'numOfRows': self.rows_per_page, 'pageNo': page_num}
-
-        async with session.get(self.bld_rgst_url, params=params) as response:
+        async with session.get(self.url, params=params) as response:
             response_json = await response.json()
             return response_json['response']['body']['items']['item']
 
