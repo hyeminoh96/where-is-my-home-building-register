@@ -28,7 +28,6 @@ with col4:
 if search_button:
     sigungu_code, bjdong_code = get_address_code(sido_option, sigungu_option, bjdong_option)
     bld_df = GetBuildingRegister(sigungu_code, bjdong_code).run()
-    print(type(bld_df))
     owner_df = get_architecture_possession(sigungu_code, bjdong_code, bld_df, st.secrets['openapi'])
     bld_df = filter_open_column(bld_df)
     owner_df = filter_owner_open_column(owner_df)

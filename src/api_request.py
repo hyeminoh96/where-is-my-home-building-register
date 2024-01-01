@@ -1,63 +1,57 @@
-import requests
 import os
 import asyncio
-import pandas as pd
+
+import aiohttp
+import requests
 from dotenv import load_dotenv
 
 
 class GetBuildingRegister:
-    def __init__(self, sigungu_code, bjdong_code):
-        self.sigungu_cd = sigungu_code
-        self.bjdong_cd = bjdong_code
+    load_dotenv()
+    service_key = os.environ.get('API_KEY')
+    bld_rgst_url = 'https://apis.data.go.kr/1613000/BldRgstService_v2/getBrTitleInfo'
+    rows_per_page = 1000
 
-        load_dotenv()
-        self.service_key = os.environ.get('API_KEY')
-        self.bld_rgst_url = 'https://apis.data.go.kr/1613000/BldRgstService_v2/getBrExposInfo'
-        self.num_per_pg = 1000
-
-        self.loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.loop)
-
-    def get_total_count(self):
-        params = {'_type': 'json', 'serviceKey': self.service_key, 'sigunguCd': self.sigungu_cd,
-                  'bjdongCd': self.bjdong_cd,
+    def request_total_count(self, sigungu_cd, bjdong_cd):
+        params = {'_type': 'json', 'serviceKey': self.service_key, 'sigunguCd': sigungu_cd,
+                  'bjdongCd': bjdong_cd,
                   'platGbCd': '0',
                   'bun': '', 'ji': '',
                   'startDate': '', 'endDate': '', 'numOfRows': '1', 'pageNo': '1'}
         response = requests.get(self.bld_rgst_url, params=params)
-        total_count = response.json()['response']['body']['totalCount']
+        response_json = response.json()
+        total_count = response_json['response']['body']['totalCount']
+        if total_count == 0:
+            raise Exception("건축물대장이 존재하지 않습니다.")
         return total_count
 
-    async def get_bld_rgst(self, page_num):
-        params = {'_type': 'json', 'serviceKey': self.service_key, 'sigunguCd': self.sigungu_cd,
-                  'bjdongCd': self.bjdong_cd,
+    async def async_request_registers(self, session, page_num, sigungu_cd, bjdong_cd):
+        params = {'_type': 'json', 'serviceKey': self.service_key, 'sigunguCd': sigungu_cd,
+                  'bjdongCd': bjdong_cd,
                   'platGbCd': '0',
                   'bun': '', 'ji': '',
-                  'startDate': '', 'endDate': '', 'numOfRows': self.num_per_pg, 'pageNo': page_num}
+                  'startDate': '', 'endDate': '', 'numOfRows': self.rows_per_page, 'pageNo': page_num}
 
-        response = await self.loop.run_in_executor(None, requests.get, self.bld_rgst_url, params)
-        response_json = response.json()['response']['body']['items']['item']
-        print(response_json)
-        return response_json
+        async with session.get(self.bld_rgst_url, params=params) as response:
+            response_json = await response.json()
+            return response_json['response']['body']['items']['item']
 
-    async def gather_coroutines(self):
-        print('passed here')
-        total_count = self.get_total_count()
-        print('total_count:', total_count)
-        futures = [asyncio.ensure_future(self.get_bld_rgst(pg_num)) for pg_num in
-                   range(1, total_count // self.num_per_pg + 2)]
-        result = await asyncio.gather(*futures)
+    async def async_request_total_registers(self, sigungu_cd, bjdong_cd):
+        total_count = self.request_total_count(sigungu_cd, bjdong_cd)
+
+        if total_count < self.rows_per_page:  # TODO: 중복된 코드 제거
+            async with aiohttp.ClientSession() as session:
+                task = self.async_request_registers(session, page_num=1, sigungu_cd=sigungu_cd,
+                                                    bjdong_cd=bjdong_cd)
+                result = await asyncio.gather(task)
+
+        else:
+            tasks = []
+            async with aiohttp.ClientSession() as session:
+                for page in range(1, total_count // self.rows_per_page + 1):
+                    task = self.async_request_registers(session, page_num=page, sigungu_cd=sigungu_cd,
+                                                        bjdong_cd=bjdong_cd)
+                    tasks.append(task)
+                result = await asyncio.gather(*tasks)
+
         return result
-
-    async def run(self) -> list:
-        result = self.loop.run_until_complete(self.gather_coroutines())
-        print('result:', result)
-        # result_df = pd.DataFrame(result)
-        self.loop.close()
-        # just return list of dict
-        return result
-
-
-if __name__ == '__main__':
-    result = GetBuildingRegister(11110, 10100).run()
-    print(result)
