@@ -66,5 +66,3 @@ Make sure that you have set the environment variable correctly before running th
 - Please make sure that you have the right credentials or access to the API that you are trying to call.
 - You can also add some error handling code to handle any possible errors while calling the API or creating the excel
   file.
-
-## License
